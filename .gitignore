@@ -1,0 +1,26 @@
+# OS Files
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Bundler
+/.bundle
+/vendor/bundle
+
+# RSpec
+/spec/examples.txt
+
+# SQLite Database
+/spec/internal/db/*.sqlite3
+/spec/internal/db/*.sqlite3-journal
+
+# Log & Temporary Files
+/spec/internal/log/*
+/spec/internal/tmp/*
+!/spec/internal/log/.keep
+!/spec/internal/tmp/.keep
+
+# Environment Files
+.env
+.env.*
