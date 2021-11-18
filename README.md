@@ -20,9 +20,23 @@ You can use the convenient DSL syntax to declare which attributes and relationsh
 
 ```ruby
 class Product < ActiveRecord::Base
-  has_search relationships: { variations: %i[title] },
-             keyed_attributes: %i[title description rating],
-             unkeyed_attributes: %i[title description]
+  searchable do |o|
+    o.relation :variations, :title, :stock_status
+
+    o.keyed :title
+    o.keyed :description
+    o.keyed :rating
+
+    # You can also create virtual attributes to search by passing in a block that returns an arel node.
+    o.keyed :title_length do
+      Arel::Nodes::NamedFunction.new('LENGTH', [
+        arel_table[:title]
+      ])
+    end
+
+    o.unkeyed :title
+    o.unkeyed :description
+  end
 end
 ```
 

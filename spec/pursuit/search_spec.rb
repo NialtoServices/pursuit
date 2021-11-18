@@ -1,17 +1,29 @@
 # frozen_string_literal: true
 
-RSpec.describe Pursuit::ActiveRecordSearch do
-  subject(:active_record_search) do
-    described_class.new(
-      Product,
-      relationships: { variations: %i[title stock_status] },
-      keyed_attributes: %i[title description rating],
-      unkeyed_attributes: %i[title description]
-    )
+RSpec.describe Pursuit::Search do
+  subject(:search) { described_class.new(search_options) }
+
+  let(:search_options) do
+    Pursuit::SearchOptions.new(Product) do |o|
+      o.relation :variations, :title, :stock_status
+
+      o.keyed :title
+      o.keyed :description
+      o.keyed :rating
+
+      o.keyed :title_length do
+        Arel::Nodes::NamedFunction.new('LENGTH', [
+          Product.arel_table[:title]
+        ])
+      end
+
+      o.unkeyed :title
+      o.unkeyed :description
+    end
   end
 
-  describe '#search' do
-    subject(:search) { active_record_search.search(query) }
+  describe '#perform' do
+    subject(:perform) { search.perform(query) }
 
     context 'when passed a blank query' do
       let(:query) { '' }
@@ -25,7 +37,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain all records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -43,7 +55,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -61,7 +73,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b)
+        expect(perform).to contain_exactly(product_b)
       end
     end
 
@@ -79,7 +91,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_c)
+        expect(perform).to contain_exactly(product_a, product_c)
       end
     end
 
@@ -97,7 +109,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -115,7 +127,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -133,7 +145,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b, product_c)
+        expect(perform).to contain_exactly(product_b, product_c)
       end
     end
 
@@ -151,7 +163,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b, product_c)
+        expect(perform).to contain_exactly(product_b, product_c)
       end
     end
 
@@ -169,7 +181,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b, product_c)
+        expect(perform).to contain_exactly(product_b, product_c)
       end
     end
 
@@ -187,7 +199,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -205,7 +217,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -223,7 +235,23 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b)
+        expect(perform).to contain_exactly(product_b)
+      end
+    end
+
+    context 'when passed a virtual keyed attribute query' do
+      let(:query) { 'title_length==5' }
+
+      let(:product_a) { Product.create!(title: 'Plain Shirt') }
+      let(:product_b) { Product.create!(title: 'Socks') }
+
+      before do
+        product_a
+        product_b
+      end
+
+      it 'is expected to contain the matching records' do
+        expect(perform).to contain_exactly(product_b)
       end
     end
 
@@ -247,7 +275,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_b)
+        expect(perform).to contain_exactly(product_b)
       end
     end
 
@@ -275,7 +303,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_c)
+        expect(perform).to contain_exactly(product_c)
       end
     end
 
@@ -307,7 +335,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -339,7 +367,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_b)
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
 
@@ -371,7 +399,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_c)
+        expect(perform).to contain_exactly(product_a, product_c)
       end
     end
 
@@ -403,7 +431,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a, product_c)
+        expect(perform).to contain_exactly(product_a, product_c)
       end
     end
 
@@ -435,7 +463,7 @@ RSpec.describe Pursuit::ActiveRecordSearch do
       end
 
       it 'is expected to contain the matching records' do
-        expect(search).to contain_exactly(product_a)
+        expect(perform).to contain_exactly(product_a)
       end
     end
   end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module Pursuit
-  class TermParser
+  class SearchTermParser
     # @return [Struct] Represents a single keyed term extracted from a query.
     #
     KeyedTerm = Struct.new(:key, :operator, :value)
 
-    # @return [Array<Pursuit::TermParser::KeyedTerm>] The keys which are permitted for use as keyed terms.
+    # @return [Array<Pursuit::SearchTermParser::KeyedTerm>] The keys which are permitted for use as keyed terms.
     #
     attr_reader :keyed_terms
 
@@ -14,14 +14,12 @@ module Pursuit
     #
     attr_reader :unkeyed_term
 
-    # Create a new `TermParser` by parsing the specified query into an 'unkeyed term' and 'keyed terms'.
+    # Create a new search term parser by parsing the specified query into an 'unkeyed term' and 'keyed terms'.
     #
     # @param query [String]        The query to parse.
-    # @param keys  [Array<Symbol>] The keys which are permitted for use as keyed terms.
+    # @param keys  [Array<String>] The keys which are permitted for use as keyed terms.
     #
     def initialize(query, keys: [])
-      keys = keys.map(&:to_s)
-
       @keyed_terms = []
       @unkeyed_term = query.gsub(/(\s+)?(\w+)(==|\*=|!=|!\*=|<=|>=|<|>)("([^"]+)?"|'([^']+)?'|[^\s]+)(\s+)?/) do |term|
         key = Regexp.last_match(2)
