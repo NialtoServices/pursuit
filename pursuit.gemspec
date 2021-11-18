@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
 
   spec.metadata['yard.run'] = 'yri'
 
-  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0', '< 6.1.0'
-  spec.add_runtime_dependency 'activesupport', '>= 5.2.0', '< 6.1.0'
+  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0', '< 6.2.0'
+  spec.add_runtime_dependency 'activesupport', '>= 5.2.0', '< 6.2.0'
 
   spec.add_development_dependency 'bundler',     '~> 2.0'
   spec.add_development_dependency 'combustion',  '~> 1.1'
