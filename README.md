@@ -23,19 +23,18 @@ class Product < ActiveRecord::Base
   searchable do |o|
     o.relation :variations, :title, :stock_status
 
-    o.keyed :title
-    o.keyed :description
-    o.keyed :rating
+    # Attributes can be used for both keyed and unkeyed searching by default, but you can pass either `keyed: false` or
+    # `unkeyed: false` to restrict when the attribute is searched.
+    o.attribute :title
+    o.attribute :description
+    o.attribute :rating, unkeyed: false
 
     # You can also create virtual attributes to search by passing in a block that returns an arel node.
-    o.keyed :title_length do
+    o.attribute :title_length, unkeyed: false do
       Arel::Nodes::NamedFunction.new('LENGTH', [
         arel_table[:title]
       ])
     end
-
-    o.unkeyed :title
-    o.unkeyed :description
   end
 end
 ```

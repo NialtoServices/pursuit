@@ -8,17 +8,13 @@ class Product < ActiveRecord::Base
   searchable do |o|
     o.relation :variations, :title, :stock_status
 
-    o.keyed :title
-    o.keyed :description
-    o.keyed :rating
-
-    o.keyed :title_length do
+    o.attribute :title
+    o.attribute :description
+    o.attribute :rating, unkeyed: false
+    o.attribute :title_length, unkeyed: false do
       Arel::Nodes::NamedFunction.new('LENGTH', [
         arel_table[:title]
       ])
     end
-
-    o.unkeyed :title
-    o.unkeyed :description
   end
 end
