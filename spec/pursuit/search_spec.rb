@@ -15,6 +15,8 @@ RSpec.describe Pursuit::Search do
           Product.arel_table[:title]
         ])
       end
+
+      o.attribute :category, :category_id
     end
   end
 
@@ -460,6 +462,27 @@ RSpec.describe Pursuit::Search do
 
       it 'is expected to contain the matching records' do
         expect(perform).to contain_exactly(product_a)
+      end
+    end
+
+    context 'when querying a custom attribute whose name matches a reflection' do
+      let(:query) { 'category==shirts' }
+
+      let(:shirts_category) { ProductCategory.create!(id: 'shirts', name: 'The Shirt Collection') }
+      let(:socks_category)  { ProductCategory.create!(id: 'socks', name: 'The Sock Collection') }
+
+      let(:product_a) { Product.create!(title: 'Plain Shirt', category: shirts_category) }
+      let(:product_b) { Product.create!(title: 'Funky Shirt', category: shirts_category) }
+      let(:product_c) { Product.create!(title: 'Socks - Pack of 4', category: socks_category) }
+
+      before do
+        product_a
+        product_b
+        product_c
+      end
+
+      it 'is expected to contain the matching records' do
+        expect(perform).to contain_exactly(product_a, product_b)
       end
     end
   end

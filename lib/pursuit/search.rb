@@ -51,12 +51,13 @@ module Pursuit
       return nil if terms.blank?
 
       terms.reduce(nil) do |chain, term|
-        reflection = options.record_class.reflections[term.key]
+        attribute_name = term.key.to_sym
+        reflection = options.relations.key?(attribute_name) ? options.record_class.reflections[term.key] : nil
         node = if reflection.present?
-                 attribute_names = options.relations[term.key.to_sym]
+                 attribute_names = options.relations[attribute_name]
                  build_arel_for_reflection(reflection, attribute_names, term.operator, term.value)
                else
-                 node_builder = options.keyed_attributes[term.key.to_sym]
+                 node_builder = options.keyed_attributes[attribute_name]
                  build_arel_for_node(node_builder.call, term.operator, term.value)
                end
 

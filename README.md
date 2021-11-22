@@ -26,12 +26,13 @@ class Product < ActiveRecord::Base
     # Attributes can be used for both keyed and unkeyed searching by default, but you can pass either `keyed: false` or
     # `unkeyed: false` to restrict when the attribute is searched.
     o.attribute :title
+    o.attribute :description
     o.attribute :rating, unkeyed: false
 
     # You can shorten the search keyword by passing the desired search term first, and then the real attribute name
     # as the second argument.
-    #  => "desc*=foo"
-    o.attribute :desc, :description
+    #  => "category*=shirts"
+    o.attribute :category, :category_id
 
     # It's also possible to query entirely custom Arel nodes by passing a block which returns the Arel node to query.
     # You could use this to query a person's full name by concatenating their first and last name columns, for example.

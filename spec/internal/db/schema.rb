@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 ActiveRecord::Schema.define do
+  create_table :product_categories, id: :string, force: true do |t|
+    t.string :name, null: false
+
+    t.timestamps null: false
+  end
+
   create_table :products, force: true do |t|
+    t.belongs_to :category, type: :string, foreign_key: { to_table: 'product_categories' }
+
     t.string :title, null: false
 
     t.text :description
