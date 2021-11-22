@@ -104,9 +104,18 @@ RSpec.describe Pursuit::SearchOptions do
       expect(search_options.attributes[:description].unkeyed).to eq(true)
     end
 
-    it 'is expected to use the matching table column node builder by default' do
+    it 'is expected to query the #term_name attribute' do
       attribute
       expect(search_options.attributes[:description].block.call).to eq(Product.arel_table[:description])
+    end
+
+    context 'when passing the attribute name to search' do
+      subject(:attribute) { search_options.attribute(:desc, :description) }
+
+      it 'is expected to query the #attribute_name attribute' do
+        attribute
+        expect(search_options.attributes[:desc].block.call).to eq(Product.arel_table[:description])
+      end
     end
 
     context 'when passing :keyed eq false' do
@@ -130,7 +139,7 @@ RSpec.describe Pursuit::SearchOptions do
     context 'when passing a block' do
       subject(:attribute) { search_options.attribute(:description, &title_length_node_builder) }
 
-      it 'is expected to use the custom node builder' do
+      it 'is expected to query the result of the passed block' do
         attribute
         expect(search_options.attributes[:description].block).to eq(title_length_node_builder)
       end

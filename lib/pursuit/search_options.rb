@@ -54,7 +54,7 @@ module Pursuit
       keys.map(&:to_s).uniq
     end
 
-    # Add a relation to the search options.
+    # Add a relation to search.
     #
     # @param name            [Symbol] The name of the relationship attribute.
     # @param attribute_names [Splat]  The name of the attributes within the relationship to search.
@@ -64,15 +64,22 @@ module Pursuit
       nil
     end
 
-    # Add a keyed attribute to search.
+    # Add an attribute to search.
     #
-    # @param name    [Symbol]  The name of the attribute.
-    # @param keyed   [Boolean] `true` when the attribute should be searchable using a keyed term, `false` otherwise.
-    # @param unkeyed [Boolean] `true` when the attribute should be searchable using an unkeyed term, `false` otherwise.
-    # @param block   [Proc]    A block which returns an Arel node to query, instead of the matching table column.
+    # @param term_name      [Symbol]  The keyed search term (can be an existing attribute, or a custom value when
+    #                                 passing either the `attribute_name` or a block returning an Arel node).
+    # @param attribute_name [Symbol]  The attribute name to search (defaults to the keyword, when left blank and no
+    #                                 block is passed).
+    # @param keyed          [Boolean] `true` when the attribute should be searchable using a keyed term,
+    #                                 `false` otherwise.
+    # @param unkeyed        [Boolean] `true` when the attribute should be searchable using an unkeyed term,
+    #                                 `false` otherwise.
+    # @param block          [Proc]    A block which returns the Arel node to query against. When left blank, the
+    #                                 matching attribute from `.arel_table` is queried instead.
     #
-    def attribute(name, keyed: true, unkeyed: true, &block)
-      attributes[name] = AttributeOptions.new(keyed, unkeyed, block || -> { record_class.arel_table[name] })
+    def attribute(term_name, attribute_name = nil, keyed: true, unkeyed: true, &block)
+      block ||= -> { record_class.arel_table[attribute_name || term_name] }
+      attributes[term_name] = AttributeOptions.new(keyed, unkeyed, block)
       nil
     end
   end
