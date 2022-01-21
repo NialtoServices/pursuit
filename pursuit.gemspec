@@ -21,16 +21,16 @@ Gem::Specification.new do |spec|
 
   spec.metadata['yard.run'] = 'yri'
 
-  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0', '< 6.2.0'
-  spec.add_runtime_dependency 'activesupport', '>= 5.2.0', '< 6.2.0'
+  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0', '< 7.1.0'
+  spec.add_runtime_dependency 'activesupport', '>= 5.2.0', '< 7.1.0'
 
   spec.add_development_dependency 'bundler',     '~> 2.0'
-  spec.add_development_dependency 'combustion',  '~> 1.1'
+  spec.add_development_dependency 'combustion',  '~> 1.3'
   spec.add_development_dependency 'guard-rspec', '~> 4.7'
   spec.add_development_dependency 'rake',        '~> 13.0'
-  spec.add_development_dependency 'rspec',       '~> 3.8'
-  spec.add_development_dependency 'rspec-rails', '~> 3.8'
-  spec.add_development_dependency 'rubocop',     '~> 0.77.0'
-  spec.add_development_dependency 'yard',        '~> 0.9.20'
+  spec.add_development_dependency 'rspec',       '~> 3.10'
+  spec.add_development_dependency 'rspec-rails', '~> 5.0'
+  spec.add_development_dependency 'rubocop',     '~> 1.25'
+  spec.add_development_dependency 'yard',        '~> 0.9'
   spec.add_development_dependency 'sqlite3',     '~> 1.4'
 end
