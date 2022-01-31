@@ -90,7 +90,7 @@ module Pursuit
 
     def build_arel_for_reflection(reflection, attribute_names, operator, value)
       nodes = build_arel_for_reflection_join(reflection)
-      count_nodes = build_arel_for_relation_count(nodes, operator, value)
+      count_nodes = build_arel_for_relation_count(nodes, operator, value) unless reflection.belongs_to?
       return count_nodes if count_nodes.present?
 
       match_nodes = attribute_names.reduce(nil) do |chain, attribute_name|
@@ -104,6 +104,23 @@ module Pursuit
     end
 
     def build_arel_for_reflection_join(reflection)
+      if reflection.belongs_to?
+        build_arel_for_belongs_to_reflection_join(reflection)
+      else
+        build_arel_for_has_reflection_join(reflection)
+      end
+    end
+
+    def build_arel_for_belongs_to_reflection_join(reflection)
+      reflection_table = reflection.klass.arel_table
+      reflection_table.where(
+        reflection_table[reflection.join_primary_key].eq(
+          options.record_class.arel_table[reflection.join_foreign_key]
+        )
+      )
+    end
+
+    def build_arel_for_has_reflection_join(reflection)
       reflection_table = reflection.klass.arel_table
       reflection_through = reflection.through_reflection
 

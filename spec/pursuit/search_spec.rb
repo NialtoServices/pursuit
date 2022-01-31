@@ -5,6 +5,7 @@ RSpec.describe Pursuit::Search do
 
   let(:search_options) do
     Pursuit::SearchOptions.new(Product) do |o|
+      o.relation :category, :name
       o.relation :variations, :title, :stock_status
 
       o.attribute :title
@@ -16,7 +17,7 @@ RSpec.describe Pursuit::Search do
         ])
       end
 
-      o.attribute :category, :category_id
+      o.attribute :cat, :category_id
     end
   end
 
@@ -253,220 +254,8 @@ RSpec.describe Pursuit::Search do
       end
     end
 
-    context 'when passed a `match` relationship search query' do
-      let(:query) { 'variations*=green' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_a, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-
-      before do
-        product_a
-        product_b
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_b)
-      end
-    end
-
-    context 'when passed an `equal to` relationship count query' do
-      let(:query) { 'variations==1' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_c)
-      end
-    end
-
-    context 'when passed a `greater than` relationship count query' do
-      let(:query) { 'variations>1' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-      let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
-      let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-        product_variation_e
-        product_variation_f
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_a, product_b)
-      end
-    end
-
-    context 'when passed a `greater than or equal to` relationship count query' do
-      let(:query) { 'variations>=2' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-      let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
-      let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-        product_variation_e
-        product_variation_f
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_a, product_b)
-      end
-    end
-
-    context 'when passed a `less than` relationship count query' do
-      let(:query) { 'variations<3' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-      let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
-      let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-        product_variation_e
-        product_variation_f
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_a, product_c)
-      end
-    end
-
-    context 'when passed a `less than or equal to` relationship count query' do
-      let(:query) { 'variations<=2' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-      let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
-      let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-        product_variation_e
-        product_variation_f
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_a, product_c)
-      end
-    end
-
-    context 'when passed a `greater than` and `less than` relationship count query' do
-      let(:query) { 'variations>1 variations<3' }
-
-      let(:product_a) { Product.create!(title: 'Plain Shirt') }
-      let(:product_b) { Product.create!(title: 'Funky Shirt') }
-      let(:product_c) { Product.create!(title: 'Socks') }
-
-      let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
-      let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
-      let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
-      let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
-      let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
-      let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
-
-      before do
-        product_a
-        product_b
-        product_c
-
-        product_variation_a
-        product_variation_b
-        product_variation_c
-        product_variation_d
-        product_variation_e
-        product_variation_f
-      end
-
-      it 'is expected to contain the matching records' do
-        expect(perform).to contain_exactly(product_a)
-      end
-    end
-
     context 'when querying a custom attribute whose name matches a reflection' do
-      let(:query) { 'category==shirts' }
+      let(:query) { 'cat==shirts' }
 
       let(:shirts_category) { ProductCategory.create!(id: 'shirts', name: 'The Shirt Collection') }
       let(:socks_category)  { ProductCategory.create!(id: 'socks', name: 'The Sock Collection') }
@@ -483,6 +272,246 @@ RSpec.describe Pursuit::Search do
 
       it 'is expected to contain the matching records' do
         expect(perform).to contain_exactly(product_a, product_b)
+      end
+    end
+
+    context 'when searching a #has_many relationship' do
+      context 'when passed a `match` relationship search query' do
+        let(:query) { 'variations*=green' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_a, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+
+        before do
+          product_a
+          product_b
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_b)
+        end
+      end
+
+      context 'when passed an `equal to` relationship count query' do
+        let(:query) { 'variations==1' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_c)
+        end
+      end
+
+      context 'when passed a `greater than` relationship count query' do
+        let(:query) { 'variations>1' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+        let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
+        let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+          product_variation_e
+          product_variation_f
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a, product_b)
+        end
+      end
+
+      context 'when passed a `greater than or equal to` relationship count query' do
+        let(:query) { 'variations>=2' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+        let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
+        let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+          product_variation_e
+          product_variation_f
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a, product_b)
+        end
+      end
+
+      context 'when passed a `less than` relationship count query' do
+        let(:query) { 'variations<3' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+        let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
+        let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+          product_variation_e
+          product_variation_f
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a, product_c)
+        end
+      end
+
+      context 'when passed a `less than or equal to` relationship count query' do
+        let(:query) { 'variations<=2' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+        let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
+        let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+          product_variation_e
+          product_variation_f
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a, product_c)
+        end
+      end
+
+      context 'when passed a `greater than` and `less than` relationship count query' do
+        let(:query) { 'variations>1 variations<3' }
+
+        let(:product_a) { Product.create!(title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(title: 'Socks') }
+
+        let(:product_variation_a) { ProductVariation.create!(product: product_b, title: 'Red') }
+        let(:product_variation_b) { ProductVariation.create!(product: product_b, title: 'Green') }
+        let(:product_variation_c) { ProductVariation.create!(product: product_b, title: 'Blue') }
+        let(:product_variation_d) { ProductVariation.create!(product: product_c, title: 'White') }
+        let(:product_variation_e) { ProductVariation.create!(product: product_a, title: 'Black') }
+        let(:product_variation_f) { ProductVariation.create!(product: product_a, title: 'Gray') }
+
+        before do
+          product_a
+          product_b
+          product_c
+
+          product_variation_a
+          product_variation_b
+          product_variation_c
+          product_variation_d
+          product_variation_e
+          product_variation_f
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a)
+        end
+      end
+    end
+
+    context 'when searching a #belongs_to relationship' do
+      context 'when passed a `match` relationship search query' do
+        let(:query) { 'category*=shirt' }
+
+        let(:product_category_a) { ProductCategory.create!(id: 'one', name: 'Shirts') }
+        let(:product_category_b) { ProductCategory.create!(id: 'two', name: 'Socks') }
+
+        let(:product_a) { Product.create!(category: product_category_a, title: 'Plain Shirt') }
+        let(:product_b) { Product.create!(category: product_category_a, title: 'Funky Shirt') }
+        let(:product_c) { Product.create!(category: product_category_b, title: 'White Socks') }
+
+        before do
+          product_category_a
+          product_category_b
+
+          product_a
+          product_b
+          product_c
+        end
+
+        it 'is expected to contain the matching records' do
+          expect(perform).to contain_exactly(product_a, product_b)
+        end
       end
     end
   end
