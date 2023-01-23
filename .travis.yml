@@ -5,6 +5,7 @@ gemfile:
   - travis/gemfiles/5.2.gemfile
   - travis/gemfiles/6.0.gemfile
   - travis/gemfiles/6.1.gemfile
+  - travis/gemfiles/7.0.gemfile
 services:
   - postgresql
 before_install:
