@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Advanced key-based searching for ActiveRecord objects.'
   spec.homepage      = 'https://github.com/nialtoservices/pursuit'
-  spec.license       = 'MIT'
+  spec.license       = 'Apache-2.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.require_paths = ['lib']
