@@ -4,6 +4,7 @@ PATH
     pursuit (1.0.0.alpha1)
       activerecord (>= 5.2.0, < 7.1.0)
       activesupport (>= 5.2.0, < 7.1.0)
+      parslet (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -79,6 +80,7 @@ GEM
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
+    parslet (2.0.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
