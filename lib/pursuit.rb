@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'pursuit/constants'
-require 'pursuit/search_options'
-require 'pursuit/search_term_parser'
-require 'pursuit/search'
-require 'pursuit/railtie' if defined?(Rails::Railtie)
+require_relative 'pursuit/constants'
+require_relative 'pursuit/search_options'
+require_relative 'pursuit/search_term_parser'
+require_relative 'pursuit/search'
+require_relative 'pursuit/railtie' if defined?(Rails::Railtie)
