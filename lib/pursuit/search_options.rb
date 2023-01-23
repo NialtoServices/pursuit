@@ -28,7 +28,7 @@ module Pursuit
       @relations = {}
       @attributes = {}
 
-      block.call(self) if block
+      block&.call(self)
     end
 
     # @return [Hash<Symbol, Proc>] The attributes which can be queried using a keyed term.

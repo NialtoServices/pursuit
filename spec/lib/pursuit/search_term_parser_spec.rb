@@ -20,13 +20,15 @@ RSpec.describe Pursuit::SearchTermParser do
     subject(:keyed_terms) { parser.keyed_terms }
 
     it 'is expected to eq the correct keyed terms' do
-      expect(keyed_terms).to eq([
-        Pursuit::SearchTermParser::KeyedTerm.new('title', '!=', 'Socks'),
-        Pursuit::SearchTermParser::KeyedTerm.new('description', '*=', 'green'),
-        Pursuit::SearchTermParser::KeyedTerm.new('stock_status', '==', 'in_stock'),
-        Pursuit::SearchTermParser::KeyedTerm.new('rating', '>=', '2'),
-        Pursuit::SearchTermParser::KeyedTerm.new('rating', '<', '5')
-      ])
+      expect(keyed_terms).to eq(
+        [
+          Pursuit::SearchTermParser::KeyedTerm.new('title', '!=', 'Socks'),
+          Pursuit::SearchTermParser::KeyedTerm.new('description', '*=', 'green'),
+          Pursuit::SearchTermParser::KeyedTerm.new('stock_status', '==', 'in_stock'),
+          Pursuit::SearchTermParser::KeyedTerm.new('rating', '>=', '2'),
+          Pursuit::SearchTermParser::KeyedTerm.new('rating', '<', '5')
+        ]
+      )
     end
   end
 end

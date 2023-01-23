@@ -1,21 +1,36 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   Exclude:
     - 'bin/**/*'
+  NewCops: enable
+  TargetRubyVersion: 2.6.0
+
+Layout/LineLength:
+  Max: 120
 
 Metrics/AbcSize:
   Max: 30
 
-Metrics/LineLength:
-  Max: 120
-
 Metrics/BlockLength:
-  Enabled: false
+  Max: 50
 
 Metrics/ClassLength:
-  Enabled: false
+  Max: 500
 
 Metrics/MethodLength:
-  Enabled: false
+  Max: 50
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 20
+
+RSpec/NestedGroups:
+  Max: 5
 
 Style/Documentation:
   Enabled: false

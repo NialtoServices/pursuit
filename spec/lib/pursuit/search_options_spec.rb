@@ -5,9 +5,7 @@ RSpec.describe Pursuit::SearchOptions do
 
   let(:title_length_node_builder) do
     proc do
-      Arel::Nodes::NamedFunction.new('LENGTH', [
-        Product.arel_table[:title]
-      ])
+      Arel::Nodes::NamedFunction.new('LENGTH', [Product.arel_table[:title]])
     end
   end
 
@@ -88,7 +86,7 @@ RSpec.describe Pursuit::SearchOptions do
   describe '#attribute' do
     subject(:attribute) { search_options.attribute(:description) }
 
-    it { is_expected.to eq(nil) }
+    it { is_expected.to be_nil }
 
     it 'is expected to add the attribute to #attributes' do
       expect { attribute }.to change(search_options.attributes, :keys).from([]).to(%i[description])
@@ -96,12 +94,12 @@ RSpec.describe Pursuit::SearchOptions do
 
     it 'is expected to allow keyed searching by default' do
       attribute
-      expect(search_options.attributes[:description].keyed).to eq(true)
+      expect(search_options.attributes[:description].keyed).to be(true)
     end
 
     it 'is expected to allow unkeyed searching by default' do
       attribute
-      expect(search_options.attributes[:description].unkeyed).to eq(true)
+      expect(search_options.attributes[:description].unkeyed).to be(true)
     end
 
     it 'is expected to query the #term_name attribute' do
@@ -123,7 +121,7 @@ RSpec.describe Pursuit::SearchOptions do
 
       it 'is expected to disallow keyed searching' do
         attribute
-        expect(search_options.attributes[:description].keyed).to eq(false)
+        expect(search_options.attributes[:description].keyed).to be(false)
       end
     end
 
@@ -132,7 +130,7 @@ RSpec.describe Pursuit::SearchOptions do
 
       it 'is expected to disallow unkeyed searching' do
         attribute
-        expect(search_options.attributes[:description].unkeyed).to eq(false)
+        expect(search_options.attributes[:description].unkeyed).to be(false)
       end
     end
 

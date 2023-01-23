@@ -41,7 +41,7 @@ module Pursuit
       return nil if value.blank?
 
       sanitized_value = "%#{ActiveRecord::Base.sanitize_sql_like(value)}%"
-      options.unkeyed_attributes.reduce(nil) do |chain, (attribute_name, node_builder)|
+      options.unkeyed_attributes.reduce(nil) do |chain, (_attribute_name, node_builder)|
         node = node_builder.call.matches(sanitized_value)
         chain ? chain.or(node) : node
       end
@@ -65,7 +65,7 @@ module Pursuit
       end
     end
 
-    def build_arel_for_node(node, operator, value)
+    def build_arel_for_node(node, operator, value) # rubocop:disable Metrics/CyclomaticComplexity
       sanitized_value = ActiveRecord::Base.sanitize_sql_like(value)
       sanitized_value = sanitized_value.to_i if sanitized_value =~ /^[0-9]+$/
 
@@ -120,6 +120,7 @@ module Pursuit
       )
     end
 
+    # rubocop:disable Metrics/AbcSize
     def build_arel_for_has_reflection_join(reflection)
       reflection_table = reflection.klass.arel_table
       reflection_through = reflection.through_reflection
@@ -143,8 +144,9 @@ module Pursuit
         )
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
-    def build_arel_for_relation_count(nodes, operator, value)
+    def build_arel_for_relation_count(nodes, operator, value) # rubocop:disable Metrics/CyclomaticComplexity
       node_builder = proc do |klass|
         count = ActiveRecord::Base.sanitize_sql_like(value).to_i
         klass.new(nodes.project(Arel.star.count), count)

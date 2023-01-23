@@ -65,7 +65,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   # Retrieve the default formatter from the current environment.
-  default_formatter = ENV['RSPEC_DEFAULT_FORMATTER']
+  default_formatter = ENV.fetch('RSPEC_DEFAULT_FORMATTER', nil)
 
   if default_formatter.is_a?(String) && !default_formatter.empty?
     config.default_formatter = default_formatter
@@ -92,4 +92,4 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
-Dir[File.expand_path('support/**/*.rb', __dir__)].each { |path| require(path) }
+Dir[File.expand_path('support/**/*.rb', __dir__)].sort.each { |path| require(path) }

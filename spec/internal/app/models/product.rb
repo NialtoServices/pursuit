@@ -14,9 +14,7 @@ class Product < ActiveRecord::Base
     o.attribute :description
     o.attribute :rating, unkeyed: false
     o.attribute :title_length, unkeyed: false do
-      Arel::Nodes::NamedFunction.new('LENGTH', [
-        arel_table[:title]
-      ])
+      Arel::Nodes::NamedFunction.new('LENGTH', [arel_table[:title]])
     end
 
     o.attribute :category, :category_id

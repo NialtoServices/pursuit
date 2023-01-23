@@ -12,9 +12,7 @@ RSpec.describe Pursuit::Search do
       o.attribute :description
       o.attribute :rating, unkeyed: false
       o.attribute :title_length, unkeyed: false do
-        Arel::Nodes::NamedFunction.new('LENGTH', [
-          Product.arel_table[:title]
-        ])
+        Arel::Nodes::NamedFunction.new('LENGTH', [Product.arel_table[:title]])
       end
 
       o.attribute :cat, :category_id
@@ -130,7 +128,7 @@ RSpec.describe Pursuit::Search do
       end
     end
 
-    context 'when passed a `not equal to` keyed attribute query' do
+    context 'when passed a numeric `not equal to` keyed attribute query' do
       let(:query) { 'rating!=2' }
 
       let(:product_a) { Product.create!(title: 'Plain Shirt', rating: 2) }
