@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pursuit (0.4.3)
+    pursuit (0.4.4)
       activerecord (>= 5.2.0, < 7.1.0)
       activesupport (>= 5.2.0, < 7.1.0)
 
