@@ -1,11 +1,12 @@
 language: ruby
 rvm:
-  - 3.2.0
+  - 3.2.2
 gemfile:
   - travis/gemfiles/5.2.gemfile
   - travis/gemfiles/6.0.gemfile
   - travis/gemfiles/6.1.gemfile
   - travis/gemfiles/7.0.gemfile
+  - travis/gemfiles/7.1.gemfile
 services:
   - postgresql
 before_install:
@@ -14,11 +15,11 @@ before_install:
 before_script:
   - psql -c 'CREATE DATABASE pursuit_test;' -U postgres
 addons:
-  postgresql: 14
+  postgresql: 16
   apt:
     packages:
-      - postgresql-14
-      - postgresql-client-14
+      - postgresql-16
+      - postgresql-client-16
 env:
   global:
     - DATABASE_URL="postgresql://127.0.0.1:5432/pursuit_test"
