@@ -3,5 +3,5 @@
 module Pursuit
   # @return [String] The gem's semantic version number.
   #
-  VERSION = '1.0.0.alpha1'
+  VERSION = '1.0.0'
 end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pursuit (1.0.0.alpha1)
+    pursuit (1.0.0)
       activerecord (>= 5.2.0)
       activesupport (>= 5.2.0)
       parslet (~> 2.0)
