@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'active_record'
+require 'active_support'
+require 'bigdecimal'
 require 'parslet'
 
 require_relative 'pursuit/constants'
