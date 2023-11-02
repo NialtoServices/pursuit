@@ -1,0 +1,44 @@
+name: RubyGem
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: RuboCop
+        run: |
+          bundle exec rubocop --parallel --format progress --format html --out rubocop-report.html
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: RuboCop Report
+          path: rubocop-report.html
+
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: RSpec
+        run: |
+          bundle exec rspec --format progress --format html --out rspec-report.html
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: RSpec Report
+          path: rspec-report.html
