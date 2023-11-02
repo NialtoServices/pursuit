@@ -1,7 +1,21 @@
 # frozen_string_literal: true
 
+require 'active_record'
+require 'active_support'
+require 'bigdecimal'
+require 'parslet'
+
 require_relative 'pursuit/constants'
-require_relative 'pursuit/search_options'
-require_relative 'pursuit/search_term_parser'
-require_relative 'pursuit/search'
-require_relative 'pursuit/railtie' if defined?(Rails::Railtie)
+require_relative 'pursuit/error'
+require_relative 'pursuit/query_error'
+require_relative 'pursuit/aggregate_modifier_not_found'
+require_relative 'pursuit/aggregate_modifier_required'
+require_relative 'pursuit/aggregate_modifiers_not_available'
+require_relative 'pursuit/attribute_not_found'
+require_relative 'pursuit/predicate_parser'
+require_relative 'pursuit/predicate_transform'
+require_relative 'pursuit/predicate_search'
+require_relative 'pursuit/term_parser'
+require_relative 'pursuit/term_transform'
+require_relative 'pursuit/term_search'
+require_relative 'pursuit/simple_search'

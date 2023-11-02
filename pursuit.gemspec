@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['support@nialtoservices.co.uk']
 
   spec.summary       = 'Advanced key-based searching for ActiveRecord objects.'
-  spec.homepage      = 'https://github.com/nialtoservices/pursuit'
+  spec.homepage      = 'https://github.com/NialtoServices/pursuit'
   spec.license       = 'Apache-2.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.metadata['rubygems_mfa_required'] = 'true'
   spec.metadata['yard.run'] = 'yri'
 
-  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0', '< 7.2.0'
-  spec.add_runtime_dependency 'activesupport', '>= 5.2.0', '< 7.2.0'
+  spec.add_runtime_dependency 'activerecord',  '>= 5.2.0'
+  spec.add_runtime_dependency 'activesupport', '>= 5.2.0'
+  spec.add_runtime_dependency 'parslet',       '~> 2.0'
 end
