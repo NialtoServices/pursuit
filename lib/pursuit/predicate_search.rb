@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 module Pursuit
-  # :nodoc:
+  # Provides an interface for declaring which attributes can be used in a predicate query, and a method for applying
+  # a predicate query to an `ActiveRecord::Relation` instance.
+  #
+  # @see Pursuit::PredicateParser
+  # @see Pursuit::PredicateTransform
   #
   class PredicateSearch
     # @return [Arel::Table] The default table to retrieve attributes from.

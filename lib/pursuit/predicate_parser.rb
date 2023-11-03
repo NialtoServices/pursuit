@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Pursuit
-  # Parser for predicate-based queries.
+  # Parser for predicate queries.
   #
-  # Predicate-based queries take an attribute to compare the value of, an operator (such as the equal sign), and the
-  # value to compare with.
+  # Predicate queries take an attribute, an operator (such as the equal sign), and a value to compare with.
   #
   # For example, to search for records where the `first_name` attribute is equal to "John" and the `last_name`
-  # attribute contains either "Doe" or "Smith", you would enter:
+  # attribute contains either "Doe" or "Smith", you might use:
+  #
   # => "first_name = John & (last_name ~ Doe | last_name ~ Smith)"
   #
   class PredicateParser < Parslet::Parser

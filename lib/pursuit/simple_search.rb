@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Pursuit
-  # :nodoc:
+  # Provides an interface for declaring which attributes should be searched in a simple query, and a method for applying
+  # a simple query to an `ActiveRecord::Relation` instance.
   #
   class SimpleSearch
     # @return [Set<Arel::Attributes::Attribute>] The attributes to match against.
