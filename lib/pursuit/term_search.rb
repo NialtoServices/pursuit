@@ -6,20 +6,20 @@ module Pursuit
   class TermSearch
     # @return [Set<Arel::Attributes::Attribute>] The attributes to match against.
     #
-    attr_reader :attributes
+    attr_accessor :attributes
 
-    # @return [ActiveRecord::Relation] The relation to which the term clauses are added.
+    # @return [Arel::Table] The default table to retrieve attributes from.
     #
-    attr_reader :relation
+    attr_accessor :default_table
 
     # Creates a new term search instance.
     #
-    # @param relation [ActiveRecord::Relation] The relation to which the term clauses are added.
-    # @param block    [Proc]                   The proc to invoke in the search instance (optional).
+    # @param default_table [Arel::Table] The default table to retrieve attributes from.
+    # @param block         [Proc]        The proc to invoke in the search instance (optional).
     #
-    def initialize(relation, &block)
+    def initialize(default_table: nil, &block)
       @attributes = Set.new
-      @relation = relation
+      @default_table = default_table
 
       instance_eval(&block) if block
     end
@@ -42,7 +42,7 @@ module Pursuit
     # @return           [Arel::Attributes::Attribute]         The underlying attribute to query.
     #
     def search_attribute(attribute)
-      attribute = relation.klass.arel_table[attribute] if attribute.is_a?(Symbol)
+      attribute = default_table[attribute] if attribute.is_a?(Symbol)
       attributes.add(attribute)
     end
 
@@ -56,12 +56,13 @@ module Pursuit
       transform.apply(tree, attributes: attributes)
     end
 
-    # Returns #relation filtered by the term query.
+    # Applies the term clauses derived from `query` to `relation`.
     #
-    # @param  query [String]                 The term query.
-    # @return       [ActiveRecord::Relation] The updated relation with the term clauses added.
+    # @param  query    [String]                 The term query.
+    # @param  relation [ActiveRecord::Relation] The base relation to apply the term clauses to.
+    # @return          [ActiveRecord::Relation] The base relation with the term clauses applied.
     #
-    def apply(query)
+    def apply(query, relation)
       node = parse(query)
       node ? relation.where(node) : relation.none
     end
