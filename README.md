@@ -28,10 +28,10 @@ Simple takes the entire query and generates a SQL `LIKE` (or `ILIKE` for *Postgr
 added to the search instance. Here's an example of how you might use simple to search a hypothetical `Product` record:
 
 ```ruby
-search = Pursuit::SimpleSearch.new(Product.all)
+search = Pursuit::SimpleSearch.new(default_table: Product.arel_table)
 search.search_attribute(:title)
 search.search_attribute(:subtitle)
-search.apply('Green Shirt')
+search.apply('Green Shirt', Product.all)
 ```
 
 Which results in the following SQL query:
@@ -50,25 +50,23 @@ The initializer method also accepts a block, which is evaluated within the insta
 when declaring the searchable attributes:
 
 ```ruby
-search = Pursuit::SimpleSearch.new(Product.all) do
+search = Pursuit::SimpleSearch.new(default_table: Product.arel_table) do
   search_attribute :title
   search_attribute :subtitle
 end
 
-search.apply('Green Shirt')
+search.apply('Green Shirt', Product.all)
 ```
 
 You can also pass custom `Arel::Attribute::Attribute` objects, which are especially useful when using joins:
 
 ```ruby
-search = Pursuit::SimpleSearch.new(
-  Product.left_outer_joins(:variations).group(:id)
-) do
+search = Pursuit::SimpleSearch.new(default_table: Product.arel_table) do
   search_attribute :title
   search_attribute ProductVariation.arel_table[:title]
 end
 
-search.apply('Green Shirt')
+search.apply('Green Shirt', Product.left_outer_joins(:variations).group(:id))
 ```
 
 Which results in the following SQL query:
@@ -92,12 +90,12 @@ Term searches break a query into individual terms on spaces, while providing dou
 means to include spaces. Here's an example of using term searches on the same `Product` record from earlier:
 
 ```ruby
-search = Pursuit::TermSearch.new(Product.all) do
+search = Pursuit::TermSearch.new(default_table: Product.arel_table) do
   search_attribute :title
   search_attribute :subtitle
 end
 
-search.apply('Green "Luxury Shirt"')
+search.apply('Green "Luxury Shirt"', Product.all)
 ```
 
 Which results in a SQL query similar to the following:
@@ -128,9 +126,7 @@ You can also rename attributes, and add attributes for joined records.
 Here's a more complex example of using predicate-based searches with joins on the `Product` record from earlier:
 
 ```ruby
-search = Pursuit::PredicateSearch.new(
-  Product.left_outer_join(:category, :variations).group(:id)
-) do
+search = Pursuit::PredicateSearch.new(default_table: Product.arel_table) do
   # Product Attributes
   permit_attribute :title
 
@@ -143,7 +139,10 @@ search = Pursuit::PredicateSearch.new(
   permit_attribute :variation_amount, ProductVariation.arel_table[:amount]
 end
 
-search.apply('title = "Luxury Shirt" & (variation_amount = 0 | variation_amount > 1000)')
+search.apply(
+  'title = "Luxury Shirt" & (variation_amount = 0 | variation_amount > 1000)',
+  Product.left_outer_join(:category, :variations).group(:id)
+)
 ```
 
 This translates to "a product whose title is 'Luxury Shirt' and has at least one variation with either an amount of 0,
@@ -181,9 +180,7 @@ Predicate searches also support "aggregate modifiers" which enable the use of ag
 must be explicitly enabled and requires you to use a `GROUP BY` clause:
 
 ```ruby
-search = Pursuit::PredicateSearch.new(
-  Product.left_outer_join(:category, :variations).group(:id)
-) do
+search = Pursuit::PredicateSearch.new(default_table: Product.arel_table, permit_aggregate_modifiers: true) do
   # Product Attributes
   permit_attribute :title
 
@@ -198,7 +195,10 @@ search = Pursuit::PredicateSearch.new(
   permit_attribute :variation_amount, ProductVariation.arel_table[:amount]
 end
 
-search.apply('title = "Luxury Shirt" & #variation > 5')
+search.apply(
+  'title = "Luxury Shirt" & #variation > 5',
+  Product.left_outer_join(:category, :variations).group(:id)
+)
 ```
 
 And the resulting SQL from this query:
