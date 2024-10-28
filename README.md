@@ -6,7 +6,9 @@ Search your ActiveRecord objects with ease!
 
 You can install **Pursuit** using the following command:
 
-  $ gem install pursuit
+```sh
+$ gem install pursuit
+```
 
 Or, by adding the following to your `Gemfile`:
 
