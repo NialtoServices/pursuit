@@ -162,7 +162,7 @@ module Pursuit
         attribute_name = context[:attribute].to_sym
         attribute = context.dig(:permitted_attributes, attribute_name)
         raise AttributeNotFound, attribute_name if attribute.blank?
-        raise AggregateModifierRequired, attribute_name if attribute.name == Arel.star
+        raise AggregateModifierRequired, attribute_name if attribute.respond_to?(:name) && attribute.name == Arel.star
 
         attribute
       end

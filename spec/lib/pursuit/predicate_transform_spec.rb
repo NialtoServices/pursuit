@@ -20,7 +20,8 @@ RSpec.describe Pursuit::PredicateTransform do
         variations: ProductVariation.arel_table[Arel.star],
         variation_title: ProductVariation.arel_table[:title],
         variation_currency: ProductVariation.arel_table[:currency],
-        variation_amount: ProductVariation.arel_table[:amount]
+        variation_amount: ProductVariation.arel_table[:amount],
+        variation_count: ProductVariation.arel_table[Arel.star].count
       }.with_indifferent_access
     end
 
@@ -338,6 +339,20 @@ RSpec.describe Pursuit::PredicateTransform do
       end
 
       it { expect { apply }.to raise_exception(Pursuit::AggregateModifierRequired) }
+    end
+
+    context 'when passed a comparison with an attribute representing a custom node' do
+      let(:tree) do
+        {
+          attribute: { string_no_quotes: 'variation_count' },
+          comparator: '=',
+          value: { integer: '123' }
+        }
+      end
+
+      it 'is expected to equal the correct ARel node' do
+        expect(apply).to eq(ProductVariation.arel_table[Arel.star].count.eq(123))
+      end
     end
 
     context 'when passed an aggregate comparison with the "=" comparator' do
